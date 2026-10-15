@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ninja's Provisions Macro Calculator</title>
+</head>
+<body style="background:#070b14; margin:0; padding:10px;">
+
+<!-- NINJA'S PROVISIONS - 3-TAB MACRO, PARTY & VOLUME EVENT CALCULATOR (CLEAN UTF-8) -->
+<div id="np-app-root" style="background:#0b111e; color:#f8fafc; font-family:system-ui,-apple-system,sans-serif; padding:16px; border-radius:14px; max-width:700px; margin:0 auto; border:2px solid #f59e0b; box-sizing:border-box;">
+
+  <!-- Brand Header -->
+  <div style="border-bottom:2px solid #26334d; padding-bottom:12px; margin-bottom:14px;">
+    <div style="color:#f59e0b; font-size:1.35rem; font-weight:900; letter-spacing:0.04em; text-transform:uppercase;">
+      ⚔️ Ninja's Provisions Macro Calculator
+    </div>
+    <div style="color:#cbd5e1; font-size:0.88rem; margin-top:2px;">
+      High-Performance Teppanyaki &bull; Custom Plate, Private Party &amp; Event Calculator
+    </div>
+    <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+      <span style="background:#1e293b; border:1px solid #f59e0b; color:#f59e0b; font-size:0.68rem; font-weight:700; padding:3px 8px; border-radius:99px;">100% SEED-OIL FREE</span>
+      <span style="background:#1e293b; border:1px solid #38bdf8; color:#38bdf8; font-size:0.68rem; font-weight:700; padding:3px 8px; border-radius:99px;">AVOCADO, COCONUT, OLIVE OIL &amp; GHEE</span>
+      <span style="background:#1e293b; border:1px solid #10b981; color:#10b981; font-size:0.68rem; font-weight:700; padding:3px 8px; border-radius:99px;">MONK FRUIT &amp; RAW HONEY</span>
+    </div>
+  </div>
+
+  <!-- 3-Mode Navigation Tabs -->
+  <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:16px; background:#131c31; padding:6px; border-radius:10px; border:1px solid #26334d;">
+    <button id="np-tab-btn-single" onclick="npSwitchTab('single')" style="background:#f59e0b; color:#0b111e; border:none; border-radius:8px; padding:10px 6px; font-size:0.78rem; font-weight:800; cursor:pointer; text-transform:uppercase;">
+      🥢 Single Plate<br><span style="font-size:0.68rem; font-weight:600;">À La Carte</span>
+    </button>
+    <button id="np-tab-btn-party" onclick="npSwitchTab('party')" style="background:transparent; color:#cbd5e1; border:none; border-radius:8px; padding:10px 6px; font-size:0.78rem; font-weight:800; cursor:pointer; text-transform:uppercase;">
+      🔥 Private Party<br><span style="font-size:0.68rem; font-weight:600;">$80/Guest (2 Meats)</span>
+    </button>
+    <button id="np-tab-btn-event" onclick="npSwitchTab('event')" style="background:transparent; color:#cbd5e1; border:none; border-radius:8px; padding:10px 6px; font-size:0.78rem; font-weight:800; cursor:pointer; text-transform:uppercase;">
+      🏟️ Events (50+)<br><span style="font-size:0.68rem; font-weight:600;">Volume Pricing</span>
+    </button>
+  </div>
+
+  <!-- ==========================================
+       TAB 1: SINGLE PERSON A LA CARTE CALCULATOR
+       ========================================== -->
+  <div id="np-view-single">
+    <div style="background:#131c31; border:1px solid #38bdf8; color:#e2e8f0; font-size:0.76rem; padding:8px 10px; border-radius:8px; margin-bottom:12px; line-height:1.4;">
+      <strong style="color:#38bdf8;">⚔️ SINGLE PLATE BUNDLE:</strong> Every full <strong>6 oz (1x) Protein</strong> includes <strong>1 Free Side</strong> (Rice or Veggies — $7 value) + <strong>1 Free 1 oz Sauce</strong> ($2 value)!
+    </div>
+
+    <!-- Sticky Scoreboard -->
+    <div style="position:sticky; top:8px; z-index:10; background:#152036; border:2px solid #f59e0b; border-radius:12px; padding:12px; margin-bottom:16px; box-shadow:0 8px 20px rgba(0,0,0,0.65);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <div>
+          <strong style="color:#f59e0b; font-size:0.84rem; text-transform:uppercase; display:block;">Single Plate Total</strong>
+          <span id="np-credit-badge" style="color:#34d399; font-size:0.72rem; font-weight:700;"></span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div id="np-tot-price" style="background:#0b111e; border:1.5px solid #34d399; color:#34d399; font-size:1.25rem; font-weight:900; padding:4px 10px; border-radius:8px;">$0.00</div>
+          <button onclick="npResetAll()" style="background:#e11d48; color:#fff; border:none; border-radius:6px; padding:6px 10px; font-size:0.74rem; font-weight:700; cursor:pointer;">Reset</button>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:6px; text-align:center;">
+        <div style="background:#0b111e; padding:7px 4px; border-radius:8px; border:1px solid #26334d;">
+          <div id="np-tot-cal" style="color:#f59e0b; font-size:1.1rem; font-weight:800;">0</div>
+          <div style="color:#94a3b8; font-size:0.66rem; font-weight:600;">KCAL</div>
+        </div>
+        <div style="background:#0b111e; padding:7px 4px; border-radius:8px; border:1px solid #26334d;">
+          <div id="np-tot-pro" style="color:#fb7185; font-size:1.1rem; font-weight:800;">0g</div>
+          <div style="color:#94a3b8; font-size:0.66rem; font-weight:600;">PROTEIN</div>
+        </div>
+        <div style="background:#0b111e; padding:7px 4px; border-radius:8px; border:1px solid #26334d;">
+          <div id="np-tot-carb" style="color:#facc15; font-size:1.1rem; font-weight:800;">0g</div>
+          <div style="color:#94a3b8; font-size:0.66rem; font-weight:600;">CARBS</div>
+        </div>
+        <div style="background:#0b111e; padding:7px 4px; border-radius:8px; border:1px solid #26334d;">
+          <div id="np-tot-fat" style="color:#34d399; font-size:1.1rem; font-weight:800;">0g</div>
+          <div style="color:#94a3b8; font-size:0.66rem; font-weight:600;">CLEAN FAT</div>
+        </div>
+      </div>
+      <div id="np-plate-summary" style="color:#cbd5e1; font-size:0.75rem; margin-top:8px; line-height:1.4;"></div>
+    </div>
+
+    <div id="np-items-list"></div>
+
+    <!-- Action Buttons: Direct Text + Clipboard Copy -->
+    <div style="display:grid; grid-template-columns:2fr 1fr; gap:8px; margin-top:10px;">
+      <button onclick="npSendSMS('single')" style="background:#10b981; color:#0b111e; border:none; border-radius:10px; padding:14px 10px; font-size:0.9rem; font-weight:900; text-transform:uppercase; cursor:pointer; box-shadow:0 4px 12px rgba(16,185,129,0.3);">
+        📲 Text Plate to Ninja's Provisions<br><span style="font-size:0.7rem; font-weight:700;">(702-239-4599)</span>
+      </button>
+      <button onclick="npCopySummary('single')" style="background:#26334d; color:#f8fafc; border:1px solid #f59e0b; border-radius:10px; padding:14px 8px; font-size:0.8rem; font-weight:800; text-transform:uppercase; cursor:pointer;">
+        📋 Copy Text
+      </button>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       TAB 2: PRIVATE PARTY SHOW
+       ========================================== -->
+  <div id="np-view-party" style="display:none;">
+    <div style="background:#131c31; border:1.5px solid #f59e0b; border-radius:10px; padding:12px; margin-bottom:14px;">
+      <div style="color:#f59e0b; font-weight:800; font-size:0.95rem; text-transform:uppercase;">🔥 Private Teppanyaki Show Experience — $80 / Guest</div>
+      <div style="color:#cbd5e1; font-size:0.78rem; margin-top:4px; line-height:1.4;">
+        Chef Ninja pulls up to your home for a live martial-arts teppanyaki show! Base <strong>$80/guest</strong> includes <strong>2 Full 6 oz Proteins (12 oz total meat per guest!)</strong> + <strong>Both Endurance Sides</strong> (1 Cup Ninja Hibachi Fried Rice &amp; Mixed Veggies) + <strong>Signature Sauces</strong>. Need a 3rd protein? Add extra 6 oz proteins for <strong>+$15 each per guest</strong>.
+      </div>
+    </div>
+
+    <div style="position:sticky; top:8px; z-index:10; background:#152036; border:2px solid #f59e0b; border-radius:12px; padding:12px; margin-bottom:16px; box-shadow:0 8px 20px rgba(0,0,0,0.65);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <div>
+          <strong style="color:#f59e0b; font-size:0.84rem; text-transform:uppercase; display:block;">Estimated Party Total</strong>
+          <span id="np-party-perperson" style="color:#38bdf8; font-size:0.75rem; font-weight:700;">$80.00 / guest</span>
+        </div>
+        <div id="np-party-tot-price" style="background:#0b111e; border:1.5px solid #34d399; color:#34d399; font-size:1.3rem; font-weight:900; padding:4px 12px; border-radius:8px;">$800.00</div>
+      </div>
+
+      <div style="font-size:0.7rem; color:#94a3b8; text-transform:uppercase; font-weight:700; margin-bottom:4px;">Macros Per Guest Feast (2 Proteins + 2 Sides Included):</div>
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:6px; text-align:center;">
+        <div style="background:#0b111e; padding:7px 4px; border-radius:8px; border:1px solid #26334d;">
+          <div id="np-party-cal" style="color:#f59e0b; font-size:1.1rem; font-weight:800;">0</div>
+          <div style="color:#94a3b8; font-size:0.65rem;">KCAL / GUEST</div>
+        </div>
+        <div style="background:#0b111e; padding:7px 4px; border-radius:8px; border:1px solid #26334d;">
+          <div id="np-party-pro" style="color:#fb7185; font-size:1.1rem; font-weight:800;">0g</div>
+          <div style="color:#94a3b8; font-size:0.65rem;">PROTEIN</div>
+        </div>
+        <div style="background:#0b111e; padding:7px 4px; border-radius:8px; border:1px solid #26334d;">
+          <div id="np-party-carb" style="color:#facc15; font-size:1.1rem; font-weight:800;">0g</div>
+          <div style="color:#94a3b8; font-size:0.65rem;">CARBS</div>
+        </div>
+        <div style="background:#0b111e; padding:7px 4px; border-radius:8px; border:1px solid #26334d;">
+          <div id="np-party-fat" style="color:#34d399; font-size:1.1rem; font-weight:800;">0g</div>
+          <div style="color:#94a3b8; font-size:0.65rem;">CLEAN FAT</div>
+        </div>
+      </div>
+      <div id="np-party-summary" style="color:#cbd5e1; font-size:0.75rem; margin-top:8px; line-height:1.4;"></div>
+    </div>
+
+    <div style="background:#131c31; border:1px solid #26334d; border-radius:10px; padding:12px; margin-bottom:12px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <strong style="color:#fff; font-size:0.95rem;">1. Number of Party Guests</strong>
+        <span id="np-party-guests-badge" style="background:#0b111e; border:1px solid #f59e0b; color:#f59e0b; font-weight:800; padding:4px 10px; border-radius:6px; font-size:0.88rem;">10 Guests</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px; margin-top:10px;">
+        <button onclick="npSetPartyGuests(-1)" style="background:#26334d; color:#fff; border:none; width:34px; height:34px; border-radius:6px; font-size:1.1rem; font-weight:700; cursor:pointer;">-</button>
+        <input id="np-party-guests-slider" type="range" min="2" max="49" step="1" value="10" oninput="npUpdateParty()" style="flex:1; accent-color:#f59e0b; height:8px; cursor:pointer;" />
+        <button onclick="npSetPartyGuests(1)" style="background:#f59e0b; color:#0b111e; border:none; width:34px; height:34px; border-radius:6px; font-size:1.1rem; font-weight:800; cursor:pointer;">+</button>
+      </div>
+    </div>
+
+    <div style="background:#131c31; border:1px solid #26334d; border-radius:10px; padding:12px; margin-bottom:12px;">
+      <strong style="color:#fff; font-size:0.95rem; display:block; margin-bottom:4px;">2. Select Your 2 Included Proteins (Included in $80/Guest)</strong>
+      
+      <label style="display:block; font-size:0.76rem; color:#f59e0b; font-weight:700; margin-bottom:4px;">INCLUDED PROTEIN #1 (6 oz):</label>
+      <select id="np-party-pro-1" onchange="npUpdateParty()" style="width:100%; padding:10px; border-radius:8px; background:#0b111e; color:#f8fafc; border:1px solid #f59e0b; font-size:0.88rem; font-weight:700; margin-bottom:10px;">
+        <option value="nys" selected>New York Strip Steak (6 oz) — 326 kcal | 41g P | 1g C | 18g F</option>
+        <option value="chk">Chicken Breast (6 oz) — 295 kcal | 43g P | 6g C | 11g F</option>
+        <option value="mahi">Mahi-Mahi (6 oz) — 263 kcal | 35g P | 6g C | 11g F</option>
+        <option value="sal">Wild-Caught Salmon (6 oz) — 352 kcal | 37g P | 6g C | 20g F</option>
+      </select>
+
+      <label style="display:block; font-size:0.76rem; color:#f59e0b; font-weight:700; margin-bottom:4px;">INCLUDED PROTEIN #2 (6 oz):</label>
+      <select id="np-party-pro-2" onchange="npUpdateParty()" style="width:100%; padding:10px; border-radius:8px; background:#0b111e; color:#f8fafc; border:1px solid #f59e0b; font-size:0.88rem; font-weight:700;">
+        <option value="chk" selected>Chicken Breast (6 oz) — 295 kcal | 43g P | 6g C | 11g F</option>
+        <option value="nys">New York Strip Steak (6 oz) — 326 kcal | 41g P | 1g C | 18g F</option>
+        <option value="mahi">Mahi-Mahi (6 oz) — 263 kcal | 35g P | 6g C | 11g F</option>
+        <option value="sal">Wild-Caught Salmon (6 oz) — 352 kcal | 37g P | 6g C | 20g F</option>
+      </select>
+    </div>
+
+    <div style="background:#131c31; border:1px solid #26334d; border-radius:10px; padding:12px; margin-bottom:12px;">
+      <strong style="color:#38bdf8; font-size:0.95rem; display:block; margin-bottom:4px;">3. Optional 3rd Protein Upgrade (+$15 / Guest Each)</strong>
+      <div id="np-party-extras-list"></div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:2fr 1fr; gap:8px; margin-top:10px;">
+      <button onclick="npSendSMS('party')" style="background:#f59e0b; color:#0b111e; border:none; border-radius:10px; padding:14px 10px; font-size:0.9rem; font-weight:900; text-transform:uppercase; cursor:pointer;">
+        📲 Text Party Quote to Ninja<br><span style="font-size:0.7rem; font-weight:700;">(702-239-4599)</span>
+      </button>
+      <button onclick="npCopySummary('party')" style="background:#26334d; color:#f8fafc; border:1px solid #f59e0b; border-radius:10px; padding:14px 8px; font-size:0.8rem; font-weight:800; text-transform:uppercase; cursor:pointer;">
+        📋 Copy Quote
+      </button>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       TAB 3: LARGE EVENTS 50+ PLATES
+       ========================================== -->
+  <div id="np-view-event" style="display:none;">
+    <div style="background:#131c31; border:1.5px solid #38bdf8; border-radius:10px; padding:12px; margin-bottom:14px;">
+      <div style="color:#38bdf8; font-weight:800; font-size:0.95rem; text-transform:uppercase;">🏟️ Large Events, Fight Camps &amp; Tournaments (50 to 500+ Plates)</div>
+      <div style="color:#cbd5e1; font-size:0.78rem; margin-top:4px; line-height:1.4;">
+        Every Base Event Plate includes <strong>6 oz Hibachi Chicken Breast + 1 Cup Ninja Coconut-Oil Fried Rice + Signature Sauce</strong> (597 kcal | 52g P | 50g C | 21g F). Automatic wholesale volume discounts apply as your plate count grows!
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:4px; margin-top:10px; text-align:center;">
+        <div id="np-tier-1" style="background:#0b111e; border:1px solid #38bdf8; padding:6px 2px; border-radius:6px;">
+          <div style="font-size:0.65rem; color:#94a3b8;">50–99</div>
+          <div style="font-size:0.8rem; font-weight:800; color:#f8fafc;">$50/pl</div>
+        </div>
+        <div id="np-tier-2" style="background:#0b111e; border:1px solid #26334d; padding:6px 2px; border-radius:6px;">
+          <div style="font-size:0.65rem; color:#94a3b8;">100–199</div>
+          <div style="font-size:0.8rem; font-weight:800; color:#f8fafc;">$42/pl</div>
+        </div>
+        <div id="np-tier-3" style="background:#0b111e; border:1px solid #26334d; padding:6px 2px; border-radius:6px;">
+          <div style="font-size:0.65rem; color:#94a3b8;">200–299</div>
+          <div style="font-size:0.8rem; font-weight:800; color:#f8fafc;">$36/pl</div>
+        </div>
+        <div id="np-tier-4" style="background:#0b111e; border:1px solid #26334d; padding:6px 2px; border-radius:6px;">
+          <div style="font-size:0.65rem; color:#94a3b8;">300–500+</div>
+          <div style="font-size:0.8rem; font-weight:800; color:#34d399;">$32/pl</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="position:sticky; top:8px; z-index:10; background:#152036; border:2px solid #38bdf8; border-radius:12px; padding:12px; margin-bottom:16px; box-shadow:0 8px 20px rgba(0,0,0,0.65);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <div>
+          <strong style="color:#38bdf8; font-size:0.84rem; text-transform:uppercase; display:block;">Total Event Quote</strong>
+          <span id="np-event-perplate" style="color:#f59e0b; font-size:0.75rem; font-weight:700;">$50.00 / plate</span>
+        </div>
+        <div id="np-event-tot-price" style="background:#0b111e; border:1.5px solid #34d399; color:#34d399; font-size:1.3rem; font-weight:900; padding:4px 12px; border-radius:8px;">$2,500.00</div>
+      </div>
+
+      <div style="font-size:0.7rem; color:#94a3b8; text-transform:uppercase; font-weight:700; margin-bottom:4px;">Macros Per Event Plate:</div>
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:6px; text-align:center;">
+        <div style="background:#0b111e; padding:7px 4px; border-radius:8px; border:1px solid #26334d;">
+          <div id="np-event-cal" style="color:#f59e0b; font-size:1.1rem; font-weight:800;">597</div>
+          <div style="color:#94a3b8; font-size:0.65rem;">KCAL</div>
+        </div>
+        <div style="background:#0b111e; padding:7px 4px; border-radius:8px; border:1px solid #26334d;">
+          <div id="np-event-pro" style="color:#fb7185; font-size:1.1rem; font-weight:800;">52g</div>
+          <div style="color:#94a3b8; font-size:0.65rem;">PROTEIN</div>
+        </div>
+        <div style="background:#0b111e; padding:7px 4px; border-radius:8px; border:1px solid #26334d;">
+          <div id="np-event-carb" style="color:#facc15; font-size:1.1rem; font-weight:800;">50g</div>
+          <div style="color:#94a3b8; font-size:0.65rem;">CARBS</div>
+        </div>
+        <div style="background:#0b111e; padding:7px 4px; border-radius:8px; border:1px solid #26334d;">
+          <div id="np-event-fat" style="color:#34d399; font-size:1.1rem; font-weight:800;">21g</div>
+          <div style="color:#94a3b8; font-size:0.65rem;">FAT</div>
+        </div>
+      </div>
+      <div id="np-event-summary" style="color:#cbd5e1; font-size:0.75rem; margin-top:8px; line-height:1.4;"></div>
+    </div>
+
+    <div style="background:#131c31; border:1px solid #26334d; border-radius:10px; padding:12px; margin-bottom:12px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <strong style="color:#fff; font-size:0.95rem;">1. Number of Event Plates (50 to 500)</strong>
+        <span id="np-event-plates-badge" style="background:#0b111e; border:1px solid #38bdf8; color:#38bdf8; font-weight:800; padding:4px 10px; border-radius:6px; font-size:0.88rem;">50 Plates</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px; margin-top:10px;">
+        <button onclick="npSetEventPlates(-10)" style="background:#26334d; color:#fff; border:none; width:42px; height:34px; border-radius:6px; font-size:0.9rem; font-weight:700; cursor:pointer;">-10</button>
+        <input id="np-event-plates-slider" type="range" min="50" max="500" step="10" value="50" oninput="npUpdateEvent()" style="flex:1; accent-color:#38bdf8; height:8px; cursor:pointer;" />
+        <button onclick="npSetEventPlates(10)" style="background:#38bdf8; color:#0b111e; border:none; width:42px; height:34px; border-radius:6px; font-size:0.9rem; font-weight:800; cursor:pointer;">+10</button>
+      </div>
+      <div id="np-event-savings-note" style="margin-top:8px; font-size:0.76rem; color:#34d399; font-weight:700;"></div>
+    </div>
+
+    <div style="background:#131c31; border:1px solid #26334d; border-radius:10px; padding:12px; margin-bottom:12px;">
+      <strong style="color:#f59e0b; font-size:0.95rem; display:block; margin-bottom:4px;">2. Add Extra 6 oz Proteins (+$15 / Plate Each)</strong>
+      <div id="np-event-extras-list"></div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:2fr 1fr; gap:8px; margin-top:10px;">
+      <button onclick="npSendSMS('event')" style="background:#38bdf8; color:#0b111e; border:none; border-radius:10px; padding:14px 10px; font-size:0.9rem; font-weight:900; text-transform:uppercase; cursor:pointer;">
+        📲 Text Event Quote to Ninja<br><span style="font-size:0.7rem; font-weight:700;">(702-239-4599)</span>
+      </button>
+      <button onclick="npCopySummary('event')" style="background:#26334d; color:#f8fafc; border:1px solid #38bdf8; border-radius:10px; padding:14px 8px; font-size:0.8rem; font-weight:800; text-transform:uppercase; cursor:pointer;">
+        📋 Copy Quote
+      </button>
+    </div>
+  </div>
+
+  <div id="np-copy-toast" style="display:none; margin-top:10px; background:#10b981; color:#0b111e; font-weight:800; text-align:center; padding:10px; border-radius:8px; font-size:0.85rem;">
+    ✅ Copied to clipboard! Ready to paste into a text to 702-239-4599.
+  </div>
+
+</div>
+
+<script>
+(function() {
+  const CHEF_PHONE = "7022394599";
+
+  const PROTEINS = {
+    chk:  { id: "chk",  name: "Chicken Breast (6 oz)",        p: 43, c: 6, f: 11 },
+    sal:  { id: "sal",  name: "Wild-Caught Salmon (6 oz)",    p: 37, c: 6, f: 20 },
+    mahi: { id: "mahi", name: "Mahi-Mahi (6 oz)",             p: 35, c: 6, f: 11 },
+    nys:  { id: "nys",  name: "New York Strip Steak (6 oz)",  p: 41, c: 1, f: 18 }
+  };
+
+  // ALL ITEMS INITIALIZED TO qty: 0 FOR A CLEAN BLANK ORDER SLATE
+  const NP_MENU = [
+    { id: "chk",  role: "protein", cat: "1. Core Clean Proteins (6 oz — Includes 1 Side & 1 Sauce)", name: "Chicken Breast (6 oz)", desc: "Seared in pure avocado oil & whipped garlic ghee, finished with preset Honey-Tamari Teriyaki", price: 22, step: 0.5, max: 3, p: 43, c: 6, f: 11, qty: 0 },
+    { id: "sal",  role: "protein", cat: "1. Core Clean Proteins (6 oz — Includes 1 Side & 1 Sauce)", name: "Wild-Caught Salmon (6 oz)", desc: "Omega-3 rich salmon seared in avocado oil & garlic ghee, finished with preset Honey-Tamari Teriyaki", price: 26, step: 0.5, max: 3, p: 37, c: 6, f: 20, qty: 0 },
+    { id: "mahi", role: "protein", cat: "1. Core Clean Proteins (6 oz — Includes 1 Side & 1 Sauce)", name: "Mahi-Mahi (6 oz)", desc: "Low-mercury white fish seared in avocado oil & garlic ghee, finished with preset Honey-Tamari Teriyaki", price: 28, step: 0.5, max: 3, p: 35, c: 6, f: 11, qty: 0 },
+    { id: "nys",  role: "protein", cat: "1. Core Clean Proteins (6 oz — Includes 1 Side & 1 Sauce)", name: "New York Strip Steak (6 oz)", desc: "Trim performance cut seared in pure avocado oil, preset whipped garlic ghee, sea salt & Tamari kiss", price: 28, step: 0.5, max: 3, p: 41, c: 1, f: 18, qty: 0 },
+    { id: "rice", role: "side",    cat: "2. Endurance Foundations (Coconut Oil) & Add-Ons", name: "Ninja Hibachi Fried Rice (1 Cup)", desc: "Jasmine rice, whole egg, unrefined coconut oil, Tamari & garlic ($7 full / $3.50 half — 1 free per 6 oz protein)", price: 7, step: 0.5, max: 3, p: 9, c: 44, f: 10, qty: 0 },
+    { id: "veg",  role: "side",    cat: "2. Endurance Foundations (Coconut Oil) & Add-Ons", name: "Teppanyaki Mixed Vegetables", desc: "Fresh zucchini, onions & mushrooms in unrefined coconut oil & Tamari ($7 full / $3.50 half — 1 free per 6 oz protein)", price: 7, step: 0.5, max: 3, p: 3, c: 12, f: 7, qty: 0 },
+    { id: "egg",  role: "addon",   cat: "2. Endurance Foundations (Coconut Oil) & Add-Ons", name: "Extra Egg Roll-In (2 Whole Eggs)", desc: "Pasture-raised eggs scrambled on the flat-top in pure avocado oil ($4 for 2 eggs / $2 for 1 egg)", price: 4, step: 0.5, max: 3, p: 12, c: 1, f: 11, qty: 0 },
+    { id: "yum",  role: "sauce",   cat: "3. Signature Dipping Sauces (1 oz Cup — Monk Fruit Sweetened)", name: "Shinobi Sauce (Avocado Yum Yum)", desc: "Pure avocado oil mayo, zero-carb Monk Fruit, garlic & spices ($2/oz — 1 free per 6 oz protein)", price: 2, step: 0.5, max: 3, p: 0, c: 0, f: 14, qty: 0 },
+    { id: "og",   role: "sauce",   cat: "3. Signature Dipping Sauces (1 oz Cup — Monk Fruit Sweetened)", name: "Citrus Orange Ginger Sauce", desc: "Blended fresh onion base (#1 ingredient), ginger root, orange zest, Tamari, olive oil & Monk Fruit ($2/oz)", price: 2, step: 0.5, max: 3, p: 1, c: 3, f: 2.5, qty: 0 },
+    { id: "mus",  role: "sauce",   cat: "3. Signature Dipping Sauces (1 oz Cup — Monk Fruit Sweetened)", name: "Ancient Sesame Mustard", desc: "Blended fresh onion base (#1 ingredient), stone-ground mustard, toasted sesame, Tamari & Monk Fruit ($2/oz)", price: 2, step: 0.5, max: 3, p: 2, c: 3, f: 4, qty: 0 },
+    { id: "fiji", role: "drink",   cat: "4. Clean Hydration (Whole Bottles Only)", name: "Fiji Natural Artesian Water (1 Bottle)", desc: "Silica-rich natural artesian electrolytes ($4/bottle — whole bottles only)", price: 4, step: 1, max: 6, p: 0, c: 0, f: 0, qty: 0 }
+  ];
+
+  const partyExtras = { chk: 0, nys: 0, mahi: 0, sal: 0 };
+  const eventExtras = { nys: 0, mahi: 0, sal: 0, chk: 0 };
+
+  let lastSingleText = "";
+  let lastPartyText = "";
+  let lastEventText = "";
+
+  function calcKcal(p, c, f) {
+    return Math.round((p * 4) + (c * 4) + (f * 9));
+  }
+
+  function fmt(num) {
+    return Number.isInteger(num) ? num : num.toFixed(1);
+  }
+
+  function fmtMoney(num) {
+    return "$" + num.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  window.npSwitchTab = function(tab) {
+    ["single", "party", "event"].forEach(t => {
+      document.getElementById("np-view-" + t).style.display = (t === tab) ? "block" : "none";
+      const btn = document.getElementById("np-tab-btn-" + t);
+      if (t === tab) {
+        btn.style.background = (t === "event") ? "#38bdf8" : "#f59e0b";
+        btn.style.color = "#0b111e";
+      } else {
+        btn.style.background = "transparent";
+        btn.style.color = "#cbd5e1";
+      }
+    });
+  };
+
+  // ==========================================
+  // TAB 1: SINGLE PLATE
+  // ==========================================
+  window.npSetQty = function(id, val) {
+    const item = NP_MENU.find(i => i.id === id);
+    if (!item) return;
+    let raw = parseFloat(val) || 0;
+    raw = (item.step === 1) ? Math.round(raw) : Math.round(raw * 2) / 2;
+    item.qty = Math.max(0, Math.min(item.max, raw));
+    npRenderSingle();
+  };
+
+  window.npResetAll = function() {
+    NP_MENU.forEach(i => { i.qty = 0; });
+    npRenderSingle();
+  };
+
+  function npRenderSingle() {
+    const listEl = document.getElementById("np-items-list");
+    const categories = [...new Set(NP_MENU.map(i => i.cat))];
+
+    const totalProteinQty = NP_MENU.filter(i => i.role === "protein").reduce((s, i) => s + i.qty, 0);
+    const earnedCredits = Math.floor(totalProteinQty);
+    let remSideCredits = earnedCredits;
+    let remSauceCredits = earnedCredits;
+
+    const itemBilling = {};
+    NP_MENU.forEach(item => {
+      if (item.qty <= 0) {
+        itemBilling[item.id] = { freeQty: 0, paidQty: 0, netCost: 0 };
+        return;
+      }
+      if (item.role === "side" && remSideCredits > 0) {
+        const covered = Math.min(item.qty, remSideCredits);
+        remSideCredits -= covered;
+        const paid = item.qty - covered;
+        itemBilling[item.id] = { freeQty: covered, paidQty: paid, netCost: paid * item.price };
+      } else if (item.role === "sauce" && remSauceCredits > 0) {
+        const covered = Math.min(item.qty, remSauceCredits);
+        remSauceCredits -= covered;
+        const paid = item.qty - covered;
+        itemBilling[item.id] = { freeQty: covered, paidQty: paid, netCost: paid * item.price };
+      } else {
+        itemBilling[item.id] = { freeQty: 0, paidQty: item.qty, netCost: item.qty * item.price };
+      }
+    });
+
+    let html = "";
+    categories.forEach(cat => {
+      html += `<div style="margin-top:16px; margin-bottom:8px; color:#38bdf8; font-size:0.82rem; font-weight:800; text-transform:uppercase; border-bottom:1px solid #26334d; padding-bottom:4px;">${cat}</div>`;
+      NP_MENU.filter(i => i.cat === cat).forEach(item => {
+        const baseCal = calcKcal(item.p, item.c, item.f);
+        const curP = item.p * item.qty;
+        const curC = item.c * item.qty;
+        const curF = item.f * item.qty;
+        const curCal = calcKcal(curP, curC, curF);
+        const bill = itemBilling[item.id];
+        const activeBorder = item.qty > 0 ? "#f59e0b" : "#26334d";
+
+        const halfNote = item.step === 0.5
+          ? `$${item.price} full (1x) / $${(item.price / 2).toFixed(2).replace(/\.00$/, "")} half (0.5x)`
+          : `$${item.price} per bottle (whole bottles only)`;
+
+        let billingText = "";
+        if (item.qty > 0) {
+          if (bill.freeQty > 0 && bill.paidQty === 0) {
+            billingText = `<span style="color:#34d399;">INCLUDED FREE (${bill.freeQty}x credit) — $0.00</span>`;
+          } else if (bill.freeQty > 0 && bill.paidQty > 0) {
+            billingText = `<span style="color:#34d399;">${bill.freeQty}x Free</span> + <span style="color:#f59e0b;">${bill.paidQty}x Extra ($${bill.netCost.toFixed(2)})</span>`;
+          } else {
+            billingText = `<span style="color:#34d399;">Subtotal: $${bill.netCost.toFixed(2)}</span>`;
+          }
+        }
+
+        html += `
+          <div style="background:#131c31; border:1.5px solid ${activeBorder}; border-radius:10px; padding:12px; margin-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+              <div>
+                <div style="font-size:0.96rem; font-weight:700; color:#ffffff;">
+                  ${item.name} <span style="color:#34d399; font-size:0.88rem; margin-left:4px;">$${item.price}</span>
+                </div>
+                <div style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">${item.desc}</div>
+              </div>
+              <div style="background:#0b111e; border:1px solid #f59e0b; color:#f59e0b; font-weight:800; font-size:0.82rem; padding:4px 8px; border-radius:6px; white-space:nowrap;">
+                ${item.qty}x
+              </div>
+            </div>
+            <div style="margin-top:8px; font-size:0.74rem; color:#cbd5e1; background:#0b111e; padding:6px 8px; border-radius:6px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+              <span><strong>1x Base Macros:</strong> ${baseCal} kcal &bull; P: ${fmt(item.p)}g &bull; C: ${fmt(item.c)}g &bull; F: ${fmt(item.f)}g</span>
+              <span style="color:#38bdf8; font-weight:600;">${halfNote}</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; margin-top:10px;">
+              <button onclick="npSetQty('${item.id}', ${item.qty - item.step})" style="background:#26334d; color:#fff; border:none; width:34px; height:34px; border-radius:6px; font-size:1.1rem; font-weight:700; cursor:pointer;">-</button>
+              <input type="range" min="0" max="${item.max}" step="${item.step}" value="${item.qty}" oninput="npSetQty('${item.id}', this.value)" style="flex:1; accent-color:#f59e0b; height:8px; cursor:pointer;" />
+              <button onclick="npSetQty('${item.id}', ${item.qty + item.step})" style="background:#f59e0b; color:#0b111e; border:none; width:34px; height:34px; border-radius:6px; font-size:1.1rem; font-weight:800; cursor:pointer;">+</button>
+            </div>
+            ${item.qty > 0 ? `
+              <div style="margin-top:8px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; font-size:0.78rem; font-weight:700; color:#f59e0b; border-top:1px solid #26334d; padding-top:6px;">
+                <span>Added (${item.qty}x): ${curCal} kcal \vert{} P:${fmt(curP)}g | C: ${fmt(curC)}g \vert{} F:${fmt(curF)}g</span>
+                <span>${billingText}</span>
+              </div>
+            ` : ``}
+          </div>
+        `;
+      });
+    });
+
+    listEl.innerHTML = html;
+
+    let totP = 0, totC = 0, totF = 0, totPrice = 0;
+    let activeNames = [];
+    NP_MENU.forEach(i => {
+      if (i.qty > 0) {
+        totP += i.p * i.qty;
+        totC += i.c * i.qty;
+        totF += i.f * i.qty;
+        totPrice += itemBilling[i.id].netCost;
+        activeNames.push(`${i.qty}x ${i.name}`);
+      }
+    });
+
+    const totCal = calcKcal(totP, totC, totF);
+    document.getElementById("np-tot-price").textContent = fmtMoney(totPrice);
+    document.getElementById("np-tot-cal").textContent = totCal;
+    document.getElementById("np-tot-pro").textContent = fmt(totP) + "g";
+    document.getElementById("np-tot-carb").textContent = fmt(totC) + "g";
+    document.getElementById("np-tot-fat").textContent = fmt(totF) + "g";
+
+    const creditBadge = document.getElementById("np-credit-badge");
+    creditBadge.textContent = earnedCredits > 0
+      ? `Includes ${earnedCredits} Free Side${earnedCredits > 1 ? "s" : ""} & ${earnedCredits} Free Sauce${earnedCredits > 1 ? "s" : ""} (${remSideCredits} side / ${remSauceCredits} sauce credit left)`
+      : "Add 1x (6 oz) Protein to unlock 1 Free Side + 1 Free Sauce";
+
+    document.getElementById("np-plate-summary").innerHTML = activeNames.length
+      ? "<strong>Active Plate:</strong> " + activeNames.join(" + ")
+      : "No items selected yet — slide any item below to build your plate.";
+
+    lastSingleText = `Hi Chef Ninja! I'd like to order a Ninja's Provisions Custom Plate:\n- Build: ${activeNames.join(" + ") || "None"}\n- Total Price: ${fmtMoney(totPrice)}\n- Macros: ${totCal} kcal | P: ${fmt(totP)}g | C: ${fmt(totC)}g | Clean Fat: ${fmt(totF)}g`;
+  }
+
+  // ==========================================
+  // TAB 2: PRIVATE PARTY SHOW
+  // ==========================================
+  window.npSetPartyGuests = function(delta) {
+    const slider = document.getElementById("np-party-guests-slider");
+    let v = parseInt(slider.value, 10) + delta;
+    slider.value = Math.max(2, Math.min(49, v));
+    npUpdateParty();
+  };
+
+  window.npSetPartyExtra = function(id, delta) {
+    partyExtras[id] = Math.max(0, Math.min(3, partyExtras[id] + delta));
+    npUpdateParty();
+  };
+
+  window.npUpdateParty = function() {
+    const guests = parseInt(document.getElementById("np-party-guests-slider").value, 10) || 10;
+    document.getElementById("np-party-guests-badge").textContent = guests + " Guests";
+
+    const pro1 = PROTEINS[document.getElementById("np-party-pro-1").value];
+    const pro2 = PROTEINS[document.getElementById("np-party-pro-2").value];
+
+    let extrasHtml = "";
+    Object.keys(PROTEINS).forEach(k => {
+      const pObj = PROTEINS[k];
+      const count = partyExtras[k];
+      const cal = calcKcal(pObj.p, pObj.c, pObj.f);
+      extrasHtml += `
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#0b111e; border:1px solid ${count > 0 ? '#f59e0b' : '#26334d'}; padding:8px 10px; border-radius:8px; margin-bottom:6px;">
+          <div>
+            <div style="font-size:0.88rem; font-weight:700; color:#fff;">+ Extra ${pObj.name} <span style="color:#34d399;">(+$15/guest)</span></div>
+            <div style="font-size:0.72rem; color:#94a3b8;">Adds ${cal} kcal | P: ${pObj.p}g | C: ${pObj.c}g | F: ${pObj.f}g per guest</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <button onclick="npSetPartyExtra('${k}', -1)" style="background:#26334d; color:#fff; border:none; width:28px; height:28px; border-radius:6px; font-weight:800; cursor:pointer;">-</button>
+            <span style="color:#f59e0b; font-weight:800; font-size:0.85rem; min-width:24px; text-align:center;">${count}x</span>
+            <button onclick="npSetPartyExtra('${k}', 1)" style="background:#f59e0b; color:#0b111e; border:none; width:28px; height:28px; border-radius:6px; font-weight:800; cursor:pointer;">+</button>
+          </div>
+        </div>
+      `;
+    });
+    document.getElementById("np-party-extras-list").innerHTML = extrasHtml;
+
+    let guestP = pro1.p + pro2.p + 9 + 3;
+    let guestC = pro1.c + pro2.c + 44 + 12;
+    let guestF = pro1.f + pro2.f + 10 + 7;
+    let extraCount = 0;
+    let extraLabels = [];
+
+    Object.keys(partyExtras).forEach(k => {
+      const q = partyExtras[k];
+      if (q > 0) {
+        extraCount += q;
+        guestP += PROTEINS[k].p * q;
+        guestC += PROTEINS[k].c * q;
+        guestF += PROTEINS[k].f * q;
+        extraLabels.push(`${q}x Extra ${PROTEINS[k].name}`);
+      }
+    });
+
+    const perGuestPrice = 80 + (extraCount * 15);
+    const totalPartyPrice = perGuestPrice * guests;
+    const guestCal = calcKcal(guestP, guestC, guestF);
+
+    document.getElementById("np-party-perperson").textContent = `${fmtMoney(perGuestPrice)} / guest (${guests} guests)`;
+    document.getElementById("np-party-tot-price").textContent = fmtMoney(totalPartyPrice);
+    document.getElementById("np-party-cal").textContent = guestCal;
+    document.getElementById("np-party-pro").textContent = guestP + "g";
+    document.getElementById("np-party-carb").textContent = guestC + "g";
+    document.getElementById("np-party-fat").textContent = guestF + "g";
+
+    const descStr = `${guests} Guests &bull; Included: ${pro1.name} + ${pro2.name} + Fried Rice + Mixed Veggies` + (extraLabels.length ? ` + ${extraLabels.join(", ")}` : "");
+    document.getElementById("np-party-summary").innerHTML = "<strong>Party Build:</strong> " + descStr;
+
+    lastPartyText = `Hi Chef Ninja! I'd like to book a Ninja's Provisions Private Party Show:\n- Guests: ${guests} (${fmtMoney(perGuestPrice)}/guest)\n- 2 Included Proteins: ${pro1.name} + ${pro2.name}\n- Included Sides: Ninja Hibachi Fried Rice + Mixed Veggies\n- Extra Proteins (+$15/ea): ${extraLabels.join(", ") || "None"}\n- Estimated Party Total: ${fmtMoney(totalPartyPrice)}\n- Per-Guest Macros: ${guestCal} kcal | P: ${guestP}g | C: ${guestC}g | F: ${guestF}g`;
+  };
+
+  // ==========================================
+  // TAB 3: LARGE EVENTS
+  // ==========================================
+  function getEventBaseRate(plates) {
+    if (plates >= 300) return { rate: 32, tier: 4, label: "300+ Mega Event Tier ($32/plate)" };
+    if (plates >= 200) return { rate: 36, tier: 3, label: "200–299 Large Event Tier ($36/plate)" };
+    if (plates >= 100) return { rate: 42, tier: 2, label: "100–199 Mid-Size Tier ($42/plate)" };
+    return { rate: 50, tier: 1, label: "50–99 Boutique Event Tier ($50/plate)" };
+  }
+
+  window.npSetEventPlates = function(delta) {
+    const slider = document.getElementById("np-event-plates-slider");
+    let v = parseInt(slider.value, 10) + delta;
+    slider.value = Math.max(50, Math.min(500, v));
+    npUpdateEvent();
+  };
+
+  window.npSetEventExtra = function(id, delta) {
+    eventExtras[id] = Math.max(0, Math.min(3, eventExtras[id] + delta));
+    npUpdateEvent();
+  };
+
+  window.npUpdateEvent = function() {
+    const plates = Math.max(50, parseInt(document.getElementById("np-event-plates-slider").value, 10) || 50);
+    document.getElementById("np-event-plates-badge").textContent = plates + " Plates";
+
+    const tierInfo = getEventBaseRate(plates);
+
+    [1, 2, 3, 4].forEach(t => {
+      const el = document.getElementById("np-tier-" + t);
+      if (t === tierInfo.tier) {
+        el.style.border = "1.5px solid #34d399";
+        el.style.background = "#152036";
+      } else {
+        el.style.border = "1px solid #26334d";
+        el.style.background = "#0b111e";
+      }
+    });
+
+    let extrasHtml = "";
+    Object.keys(PROTEINS).forEach(k => {
+      const pObj = PROTEINS[k];
+      const count = eventExtras[k];
+      const cal = calcKcal(pObj.p, pObj.c, pObj.f);
+      extrasHtml += `
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#0b111e; border:1px solid ${count > 0 ? '#38bdf8' : '#26334d'}; padding:8px 10px; border-radius:8px; margin-bottom:6px;">
+          <div>
+            <div style="font-size:0.88rem; font-weight:700; color:#fff;">+ Extra ${pObj.name} <span style="color:#34d399;">(+$15/plate)</span></div>
+            <div style="font-size:0.72rem; color:#94a3b8;">Adds ${cal} kcal | P: ${pObj.p}g | C: ${pObj.c}g | F: ${pObj.f}g per plate</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <button onclick="npSetEventExtra('${k}', -1)" style="background:#26334d; color:#fff; border:none; width:28px; height:28px; border-radius:6px; font-weight:800; cursor:pointer;">-</button>
+            <span style="color:#38bdf8; font-weight:800; font-size:0.85rem; min-width:24px; text-align:center;">${count}x</span>
+            <button onclick="npSetEventExtra('${k}', 1)" style="background:#38bdf8; color:#0b111e; border:none; width:28px; height:28px; border-radius:6px; font-weight:800; cursor:pointer;">+</button>
+          </div>
+        </div>
+      `;
+    });
+    document.getElementById("np-event-extras-list").innerHTML = extrasHtml;
+
+    let plateP = 43 + 9;
+    let plateC = 6 + 44;
+    let plateF = 11 + 10;
+    let extraCount = 0;
+    let extraLabels = [];
+
+    Object.keys(eventExtras).forEach(k => {
+      const q = eventExtras[k];
+      if (q > 0) {
+        extraCount += q;
+        plateP += PROTEINS[k].p * q;
+        plateC += PROTEINS[k].c * q;
+        plateF += PROTEINS[k].f * q;
+        extraLabels.push(`${q}x Extra ${PROTEINS[k].name}`);
+      }
+    });
+
+    const perPlatePrice = tierInfo.rate + (extraCount * 15);
+    const totalEventPrice = perPlatePrice * plates;
+    const plateCal = calcKcal(plateP, plateC, plateF);
+
+    const savingsVs50 = (50 - tierInfo.rate) * plates;
+    const savingsEl = document.getElementById("np-event-savings-note");
+    if (savingsVs50 > 0) {
+      savingsEl.textContent = `🎉 Active Tier: ${tierInfo.label} — Saving ${fmtMoney(savingsVs50)} on volume discount!`;
+    } else {
+      savingsEl.textContent = `Active Tier: ${tierInfo.label} (Slide to 100+ plates to unlock $42/plate volume pricing!)`;
+    }
+
+    document.getElementById("np-event-perplate").textContent = `${fmtMoney(perPlatePrice)} / plate (${plates} plates)`;
+    document.getElementById("np-event-tot-price").textContent = fmtMoney(totalEventPrice);
+    document.getElementById("np-event-cal").textContent = plateCal;
+    document.getElementById("np-event-pro").textContent = plateP + "g";
+    document.getElementById("np-event-carb").textContent = plateC + "g";
+    document.getElementById("np-event-fat").textContent = plateF + "g";
+
+    const descStr = `${plates} Plates (${tierInfo.label}) &bull; Base: 6 oz Chicken + 1 Cup Fried Rice` + (extraLabels.length ? ` + ${extraLabels.join(", ")}` : "");
+    document.getElementById("np-event-summary").innerHTML = "<strong>Event Build:</strong> " + descStr;
+
+    lastEventText = `Hi Chef Ninja! I'd like an Event Quote for Ninja's Provisions:\n- Plates: ${plates} (${tierInfo.label} -> ${fmtMoney(perPlatePrice)}/plate)\n- Base Included: 6 oz Chicken Breast + 1 Cup Ninja Hibachi Fried Rice\n- Extra Proteins (+$15/ea): ${extraLabels.join(", ") || "None"}\n- Total Event Estimate: ${fmtMoney(totalEventPrice)}\n- Per-Plate Macros: ${plateCal} kcal | P: ${plateP}g | C: ${plateC}g | F: ${plateF}g`;
+  };
+
+  function getActiveMessage(mode) {
+    return (mode === "single") ? lastSingleText : (mode === "party" ? lastPartyText : lastEventText);
+  }
+
+  window.npCopySummary = function(mode) {
+    const txt = getActiveMessage(mode);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt);
+    }
+    const toast = document.getElementById("np-copy-toast");
+    toast.style.display = "block";
+    setTimeout(() => { toast.style.display = "none"; }, 3500);
+  };
+
+  window.npSendSMS = function(mode) {
+    const txt = getActiveMessage(mode);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt);
+    }
+    const ua = navigator.userAgent || "";
+    const isIOS = /iPad|iPhone|iPod/.test(ua);
+    const sep = isIOS ? "&" : "?";
+    window.location.href = `sms:${CHEF_PHONE}${sep}body=${encodeURIComponent(txt)}`;
+  };
+
+  npRenderSingle();
+  npUpdateParty();
+  npUpdateEvent();
+})();
+</script>
+
+</body>
+</html>
